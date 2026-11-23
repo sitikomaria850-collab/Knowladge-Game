@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Knowladge Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="player-screen" class="screen login-screen">
+    <div class="login-decoration decoration-one">⭐</div>
+    <div class="login-decoration decoration-two">📚</div>
+    <div class="login-decoration decoration-three">🏆</div>
+    <div class="login-decoration decoration-four">✨</div>
+
+    <div class="login-card">
+
+        <div class="login-logo">
+            <span>🎓</span>
+        </div>
+
+        <h1>KNOWLEDGE GAME</h1>
+
+        <p class="login-subtitle">
+            Belajar, Bermain, dan Raih Prestasi!
+        </p>
+
+        <div class="login-illustration">
+            <span>📖</span>
+            <span>💡</span>
+            <span>✏️</span>
+        </div>
+
+        <div class="login-welcome">
+            <h2>Selamat Datang!</h2>
+            <p>Siap menguji pengetahuanmu hari ini?</p>
+        </div>
+
+        <div class="login-input-group">
+            <label for="player-name">Nama Pemain</label>
+            <input
+                type="text"
+                id="player-name"
+                placeholder="Masukkan nama kamu..."
+                maxlength="25"
+                autocomplete="nickname"
+            >
+        </div>
+
+        <button
+            id="player-start-btn"
+            class="login-start-btn"
+            type="button"
+            onclick="registerPlayer()"
+        >
+            MULAI BERMAIN 🚀
+        </button>
+
+        <p id="player-status" class="login-status">
+            Masukkan namamu untuk memulai petualangan!
+        </p>
+
+        <div class="login-footer">
+            ✨ Let's Learn and Have Fun! ✨
+        </div>
+
+    </div>
+</div>
+
+
+
+
+
+
+    <!-- Elemen Audio Musik Latar (Pastikan nama file di src sesuai dengan file Anda) -->
+    <audio id="bgm-audio" loop>
+        <source src="musik.mp3.mp3" type="audio/mpeg">
+        Browser Anda tidak mendukung pemutaran audio.
+    </audio>
+
+    <div class="game-card">
+
+        <!-- 1. TAMPILAN UTAMA -->
+        <div id="main-menu" class="screen active">
+            <h1>🎮 KNOWLADGE GAME</h1>
+            <button class="btn" onclick="startTheGame()">▶️ Mulai Main</button>
+            <button class="btn btn-secondary" onclick="showLeaderboard()">🏆 Leaderboard & Reset Skor</button>
+            <button class="btn btn-secondary" onclick="showScreen('settings-menu')">⚙️ Pengaturan</button>
+            <button
+    class="btn"
+    onclick="resetAllLevels()"
+    style="background-color: #e53935; color: white; width: 100%; margin-top: 15px;"
+>
+    🔄 Reset Semua Level
+</button>
+        </div>
+
+        <!-- 2. TAMPILAN PENGATURAN -->
+        <div id="settings-menu" class="screen">
+            <h2>⚙️ Pengaturan Suara</h2>
+            
+            <div class="setting-group checkbox-group">
+                <label for="sound-toggle">Efek Suara (SFX):</label>
+                <input type="checkbox" id="sound-toggle" checked onchange="saveSettings()">
+            </div>
+
+            <div class="setting-group checkbox-group">
+                <label for="bgm-toggle">Musik Latar (BGM):</label>
+                <input type="checkbox" id="bgm-toggle" checked onchange="toggleBGM()">
+            </div>
+
+            <div class="setting-group">
+                <label for="volume-slider">Master Volume: <span id="vol-val">80%</span></label>
+                <input type="range" id="volume-slider" min="0" max="100" value="80" oninput="updateVolume(this.value)">
+            </div>
+
+            <button class="btn btn-secondary" onclick="showScreen('main-menu')">⬅️ Kembali ke Menu Utama</button>
+        </div>
+
+        <!-- 3. TAMPILAN PILIH KATEGORI -->
+        <div id="category-menu" class="screen">
+            <h2>📚 Pilih Mapel</h2>
+            <button class="btn" onclick="selectCategory('matematika')">🔢 Matematika</button>
+            <button class="btn" onclick="selectCategory('agama')">🕌 Agama</button>
+            <button class="btn" onclick="selectCategory('sejarah_indonesia')">🏛️ Sejarah Indonesia</button>
+            <button class="btn" onclick="selectCategory('pjok')">⚽ pendidikan Jasmani Olahraga Kebugaran</button>
+            <button class="btn" onclick="selectCategory('Bahasa_Indonesia')">📖 Bahasa Indonesia</button>
+            <button class="btn" onclick="selectCategory('b_madura')">🗣️ Bahasa Madura</button>
+            <button class="btn" onclick="selectCategory('b_inggris')">🌍 Bahasa Inggris</button>
+            <button class="btn" onclick="selectCategory('pendidikan_pancasila')">🇮🇩 Pendidikan Pancasila</button>
+            <button class="btn btn-secondary" onclick="showScreen('main-menu')">⬅️ Kembali</button>
+        </div>
+
+        <!-- 4. TAMPILAN PILIH LEVEL -->
+        <div id="level-menu" class="screen">
+            <h2 id="category-title">Pilih Level</h2>
+            <div class="btn-grid" id="level-buttons"></div>
+            <button class="btn btn-secondary" style="margin-top: 20px;" onclick="showScreen('category-menu')">⬅️ Kembali</button>
+        </div>
+
+        <!-- 5. TAMPILAN KUIS -->
+        <div id="quiz-screen" class="screen">
+            <div class="info-bar">
+                <span id="quiz-category-text">Kategori</span>
+                <span id="quiz-level-text">Level 1</span>
+            </div>
+            <h2 id="question-text">Pertanyaan akan muncul di sini?</h2>
+            <div id="options-container"></div>
+            <button class="btn btn-secondary" style="margin-top: 15px;" onclick="showScreen('level-menu')">🏳️ keluar</button>
+        </div>
+
+<div id="success-popup" class="success-popup">
+    <div class="success-card">
+        <div class="success-icon">🏆</div>
+        <h2>Kamu Boleh Juga!</h2>
+        <p>Jawaban Kamu Benar!</p>
+        <div class="success-points">+10 POIN</div>
+        <button onclick="closeSuccessPopup()">LANJUTKAN</button>
+    </div>
+</div>
+
+
+<div id="wrong-popup" class="success-popup">
+
+    <div class="success-card wrong-card">
+
+        <div class="success-icon">❌</div>
+
+        <h2>YAH, JAWABAN KAMU SALAH!</h2>
+
+        <p>Jangan menyerah, yuk pelajari pembahasannya!</p>
+
+        <div class="wrong-points">-5 POIN</div>
+
+        <hr>
+
+        <h3>📖 Soal:</h3>
+        <p id="correction-question"></p>
+
+        <h3>✅ Jawaban yang Benar:</h3>
+        <p id="correction-answer"></p>
+
+        <h3>💡 Materi Pembetulan:</h3>
+        <p id="correction-material"></p>
+
+        <button type="button" onclick="closeWrongPopup()">
+            LANJUTKAN
+        </button>
+
+    </div>
+
+</div>
+
+
+    </div>
+    
+<div id="leaderboard-popup" class="leaderboard-overlay">
+    <div class="leaderboard-box">
+        <h2>🏆 LEADERBOARD 🏆</h2>
+        <p class="leaderboard-subtitle">Pencapaian Skor Mata Pelajaran</p>
+
+        <div id="leaderboard-content"></div>
+
+        <div class="leaderboard-total">
+            🌟 Total Skor Keseluruhan:
+            <strong id="leaderboard-total-score">0</strong> Poin
+        </div>
+
+        <div class="leaderboard-buttons">
+            <button onclick="closeLeaderboard()" class="btn">
+                Tutup
+            </button>
+            <button onclick="confirmResetScore()" class="btn btn-reset">
+                🔄 Reset Skor
+            </button>
+            
+<div id="reset-confirm-popup" class="leaderboard-overlay">
+    <div class="leaderboard-box reset-confirm-box">
+        <h2>⚠️ RESET SKOR?</h2>
+        <p>Apakah kamu yakin ingin mereset semua skor?</p>
+        <p>Semua skor mata pelajaran akan kembali menjadi 0.</p>
+
+        <div class="leaderboard-buttons">
+            <button onclick="closeResetConfirm()" class="btn">
+                Batal
+            </button>
+            <button onclick="executeResetScore()" class="btn btn-reset">
+                Ya, Reset
+            </button>
+        </div>
+    </div>
+</div>
+
+        </div>
+    </div>
+</div>
+
+<div id="reset-success-popup" class="leaderboard-overlay">
+    <div class="leaderboard-box reset-confirm-box">
+        <h2>✅ BERHASIL!</h2>
+        <p>Semua skor berhasil direset kembali menjadi 0!</p>
+
+        <div class="leaderboard-total">
+            <strong>Total Skor: 0 Poin</strong>
+        </div>
+
+        <button class="btn"
+            onclick="closeResetSuccess()"
+            style="width:100%; margin-top:15px;">
+            OK
+        </button>
+    </div>
+</div>
+
+<!-- POPUP KONFIRMASI RESET LEVEL -->
+<div id="reset-level-popup" class="leaderboard-overlay">
+    <div class="leaderboard-box reset-confirm-box">
+        <h2>⚠️ RESET LEVEL?</h2>
+        <p>Apakah kamu yakin ingin mereset semua level?</p>
+        <p>Semua level yang sudah terbuka akan dikunci kembali.</p>
+
+        <div class="leaderboard-buttons">
+            <button onclick="closeResetLevel()" class="btn">
+                Batal
+            </button>
+
+            <button onclick="executeResetLevel()" class="btn btn-reset">
+                Ya, Reset
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- POPUP RESET LEVEL BERHASIL -->
+<div id="reset-level-success" class="leaderboard-overlay">
+    <div class="leaderboard-box reset-confirm-box">
+        <h2 style="color:#16a34a;">✅ BERHASIL!</h2>
+        <p>Semua level berhasil direset!</p>
+        <p>Semua level sekarang terkunci kembali kecuali Level 1.</p>
+
+        <button onclick="closeResetLevelSuccess()" class="btn"
+            style="width:100%; margin-top:15px;">
+            OK
+        </button>
+    </div>
+</div>
+
+
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script src="script.js"></script>
+</body>
+</html>
